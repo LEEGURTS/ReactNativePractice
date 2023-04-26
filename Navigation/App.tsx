@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import {
   NavigationContainer,
@@ -8,11 +9,13 @@ import HomeScreen from './components/screens/HomeScreen';
 import DetailScreen from './components/screens/DetailScreen';
 import {Text, TouchableOpacity, View} from 'react-native';
 import HeaderlessScreen from './components/screens/HeaderlessScreen';
+import DrawNavigator from './components/screens/DrawNavigator';
+import TabNavigator from './components/screens/TabNavigator';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): JSX.Element {
-  const navigationRef = useNavigationContainerRef();
+  const navigationRef = useNavigationContainerRef<RootStackParamList>();
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator initialRouteName="Home">
@@ -55,7 +58,7 @@ function App(): JSX.Element {
               <TouchableOpacity
                 onPress={() => {
                   navigationRef.navigate('Detail', {
-                    id: navigationRef.getCurrentRoute()?.params.id + 1,
+                    id: navigationRef.getCurrentRoute().params.id + 1,
                   });
                 }}>
                 <Text>Right</Text>
@@ -63,10 +66,23 @@ function App(): JSX.Element {
             ),
           }}
         />
-
         <Stack.Screen
           name="Headerless"
           component={HeaderlessScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="DrawNavigator"
+          component={DrawNavigator}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="TabNavigator"
+          component={TabNavigator}
           options={{
             headerShown: false,
           }}
@@ -81,6 +97,7 @@ export type RootStackParamList = {
   Detail: {id: number};
   Headerless: undefined;
   DrawNavigator: undefined;
+  TabNavigator: undefined;
 };
 
 export default App;

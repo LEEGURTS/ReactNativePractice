@@ -1,14 +1,22 @@
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  createDrawerNavigator,
+  DrawerContentComponentProps,
+  DrawerScreenProps,
+} from '@react-navigation/drawer';
 import React from 'react';
 import {Button, Text, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
-const Drawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator<DrawNavigatorStackParamList>();
 
-function Home({navigation}: any): JSX.Element {
+type HomeProps = DrawerScreenProps<DrawNavigatorStackParamList, 'Home'>;
+type SettingProps = DrawerScreenProps<DrawNavigatorStackParamList, 'Setting'>;
+
+function Home({navigation}: HomeProps): JSX.Element {
   return (
     <View>
       <Text>Home</Text>
+      <Button title="뒤로가기" onPress={() => navigation.goBack()} />
       <Button title="Drawer 열기" onPress={() => navigation.openDrawer()} />
       <Button
         title="Setting 열기"
@@ -18,7 +26,7 @@ function Home({navigation}: any): JSX.Element {
   );
 }
 
-function SettingScreen({navigation}: any): JSX.Element {
+function SettingScreen({navigation}: SettingProps): JSX.Element {
   return (
     <View>
       <Text>Setting</Text>
@@ -27,15 +35,45 @@ function SettingScreen({navigation}: any): JSX.Element {
   );
 }
 
-function DrawNavigator(): JSX.Element {
+function drawerContent({navigation}: DrawerContentComponentProps) {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home" backBehavior="history">
-        <Drawer.Screen name="Home" component={Home} />
-        <Drawer.Screen name="Setting" component={SettingScreen} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <SafeAreaView>
+      <Text>A Custom Drawer</Text>
+      <Button title="Close Drawer" onPress={() => navigation.closeDrawer()} />
+    </SafeAreaView>
   );
 }
+
+function DrawNavigator(): JSX.Element {
+  return (
+    <Drawer.Navigator
+      initialRouteName="Home"
+      backBehavior="history"
+      drawerContent={drawerContent}
+      screenOptions={{
+        headerShown: true,
+      }}>
+      <Drawer.Screen
+        name="Home"
+        component={Home}
+        options={{
+          title: '홈',
+        }}
+      />
+      <Drawer.Screen
+        name="Setting"
+        component={SettingScreen}
+        options={{
+          title: '설정',
+        }}
+      />
+    </Drawer.Navigator>
+  );
+}
+
+type DrawNavigatorStackParamList = {
+  Home: undefined;
+  Setting: undefined;
+};
 
 export default DrawNavigator;

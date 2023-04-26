@@ -27,6 +27,14 @@ function HomeScreen({navigation}: HomeScreenProps): JSX.Element {
           title="Headerless 열기"
           onPress={() => navigation.navigate('Headerless')}
         />
+        <Button
+          title="Drawer 열기"
+          onPress={() => navigation.navigate('DrawNavigator')}
+        />
+        <Button
+          title="Tab 열기"
+          onPress={() => navigation.navigate('TabNavigator')}
+        />
       </View>
     </>
   );
