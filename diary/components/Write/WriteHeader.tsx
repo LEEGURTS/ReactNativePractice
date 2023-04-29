@@ -8,9 +8,15 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface WriteHeaderProps {
   onSave: () => void;
+  onAskRemove: () => void;
+  isEditing: boolean;
 }
 
-function WriteHeader({onSave}: WriteHeaderProps): JSX.Element {
+function WriteHeader({
+  onSave,
+  onAskRemove,
+  isEditing,
+}: WriteHeaderProps): JSX.Element {
   const navigation =
     useNavigation<
       NativeStackNavigationProp<RootStackParamList & MainTabParamList>
@@ -26,13 +32,16 @@ function WriteHeader({onSave}: WriteHeaderProps): JSX.Element {
         </Pressable>
       </View>
       <View style={styles.buttons}>
-        <View style={[styles.iconButtonWrapper, styles.marginRight]}>
-          <Pressable
-            style={styles.iconButton}
-            android_ripple={{color: '#ededed'}}>
-            <Icon name="delete-forever" size={24} color="#ef5350" />
-          </Pressable>
-        </View>
+        {isEditing && (
+          <View style={[styles.iconButtonWrapper, styles.marginRight]}>
+            <Pressable
+              style={styles.iconButton}
+              onPress={onAskRemove}
+              android_ripple={{color: '#ededed'}}>
+              <Icon name="delete-forever" size={24} color="#ef5350" />
+            </Pressable>
+          </View>
+        )}
         <View style={styles.iconButtonWrapper}>
           <Pressable
             style={styles.iconButton}

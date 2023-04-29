@@ -3,7 +3,7 @@ import React from 'react';
 import MainTab from './MainTab';
 import WriteScreen from './WriteScreen';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootStack(): JSX.Element {
   return (
@@ -24,7 +24,12 @@ function RootStack(): JSX.Element {
 
 export type RootStackParamList = {
   MainTab: undefined;
-  Write: undefined;
+  Write?: {
+    id?: string;
+    title: string;
+    body: string;
+    date: string;
+  };
 };
 
 export default RootStack;

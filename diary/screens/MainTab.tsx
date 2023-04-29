@@ -3,7 +3,8 @@ import React from 'react';
 import FeedsScreen from './FeedsScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CalendarScreen from './CalendarScreen';
-import WriteScreen from './WriteScreen';
+import SeachScreen from './SearchScreen';
+import SearchHeader from '../components/Search/SearchHeader';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
@@ -39,9 +40,10 @@ function MainTab(): JSX.Element {
       />
       <Tab.Screen
         name="Search"
-        component={WriteScreen}
+        component={SeachScreen}
         options={{
           tabBarIcon: ({color, size}) => getIcon(color, size, 'search'),
+          headerTitle: () => <SearchHeader />,
         }}
       />
     </Tab.Navigator>

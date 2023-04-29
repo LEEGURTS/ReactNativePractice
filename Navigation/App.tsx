@@ -43,7 +43,7 @@ function App(): JSX.Element {
               <TouchableOpacity
                 onPress={() => {
                   navigationRef.navigate('Detail', {
-                    id: navigationRef.getCurrentRoute()?.params.id - 1,
+                    id: 3,
                   });
                 }}>
                 <Text>Left</Text>

@@ -1,25 +1,59 @@
 import React, {useState, useContext} from 'react';
-import {StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
+import {StyleSheet, KeyboardAvoidingView, Platform, Alert} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import WriteHeader from '../components/Write/WriteHeader';
 import WriteEditor from '../components/Write/WriteEditor';
 import LogContext from '../contexts/LogContext';
 import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import {RootStackParamList} from './RootStack';
 import {MainTabParamList} from './MainTab';
 
-function WriteScreen(): JSX.Element {
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
-  const {onCreate} = useContext(LogContext);
+type WriteScreenNavigationProp = NativeStackScreenProps<
+  RootStackParamList,
+  'Write'
+>;
+
+function WriteScreen({route}: WriteScreenNavigationProp): JSX.Element {
+  const log = route.params;
+
+  const [title, setTitle] = useState(log?.title ?? '');
+  const [body, setBody] = useState(log?.body ?? '');
+  const {onCreate, onModify, onRemove} = useContext(LogContext);
   const navigation =
     useNavigation<
       NativeStackNavigationProp<RootStackParamList & MainTabParamList>
     >();
   const onSave = () => {
-    onCreate({title, body, date: new Date().toISOString()});
+    if (log) {
+      onModify({id: log.id!, date: log.date, title, body});
+    } else {
+      onCreate({title, body, date: new Date().toISOString()});
+    }
+
     navigation.pop();
+  };
+
+  const onAskRemove = () => {
+    Alert.alert(
+      '삭제',
+      '정말로 삭제하시겠습니까?',
+      [
+        {text: '취소', style: 'cancel'},
+        {
+          text: '삭제',
+          style: 'destructive',
+          onPress: () => {
+            onRemove(log?.id!);
+            navigation.pop();
+          },
+        },
+      ],
+      {cancelable: true},
+    );
   };
 
   return (
@@ -27,7 +61,11 @@ function WriteScreen(): JSX.Element {
       <KeyboardAvoidingView
         style={styles.avoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <WriteHeader onSave={onSave} />
+        <WriteHeader
+          onSave={onSave}
+          onAskRemove={onAskRemove}
+          isEditing={!!log}
+        />
         <WriteEditor
           title={title}
           body={body}
